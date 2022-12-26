@@ -1,0 +1,325 @@
+body {
+    font-family: 'Overpass', sans-serif;
+    font-weight: normal;
+    font-size: 100%;
+    color: #1b262c;
+    
+    margin: 0;
+    background-color: #0f4c75;
+}
+
+/*************************************************/
+
+#contenedor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    margin: 0;
+    padding: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+    width: 100%;
+    height: 100%;
+}
+
+#central {
+    max-width: 320px;
+    width: 100%;
+}
+
+.titulo {
+    font-size: 250%;
+    color:#bbe1fa;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#login {
+    width: 100%;
+    padding: 50px 30px;
+    background-color: #3282b8;
+    
+    -webkit-box-shadow: 0px 0px 5px 5px rgba(0,0,0,0.15);
+    -moz-box-shadow: 0px 0px 5px 5px rgba(0,0,0,0.15);
+    box-shadow: 0px 0px 5px 5px rgba(0,0,0,0.15);
+    
+    border-radius: 3px 3px 3px 3px;
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
+    
+    box-sizing: border-box;
+}
+
+#login input {
+    font-family: 'Overpass', sans-serif;
+    font-size: 110%;
+    color: #1b262c;
+    
+    display: block;
+    width: 100%;
+    height: 40px;
+    
+    margin-bottom: 10px;
+    padding: 5px 5px 5px 10px;
+    
+    box-sizing: border-box;
+    
+    border: none;
+    border-radius: 3px 3px 3px 3px;
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
+}
+
+#login input::placeholder {
+    font-family: 'Overpass', sans-serif;
+    color: #E4E4E4;
+}
+
+#login button {
+    font-family: 'Overpass', sans-serif;
+    font-size: 110%;
+    color:#1b262c;
+    width: 100%;
+    height: 40px;
+    border: none;
+    
+    border-radius: 3px 3px 3px 3px;
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
+    
+    background-color: #bbe1fa;
+    
+    margin-top: 10px;
+}
+
+#login button:hover {
+    background-color: #0f4c75;
+    color:#bbe1fa;
+}
+
+.pie-form {
+    font-size: 90%;
+    text-align: center;    
+    margin-top: 15px;
+}
+
+.pie-form a {
+    display: block;
+    text-decoration: none;
+    color: #bbe1fa;
+    margin-bottom: 3px;
+}
+
+.pie-form a:hover {
+    color: #0f4c75;
+}
+
+.inferior {
+    margin-top: 10px;
+    font-size: 90%;
+    text-align: center;
+}
+
+.inferior a {
+    display: block;
+    text-decoration: none;
+    color: #bbe1fa;
+    margin-bottom: 3px;
+}
+
+.inferior a:hover {
+    color: #3282b8;
+}
+
+/* Loader */
+
+.loader{
+    margin: 3rem auto;
+    display: block;
+    width: 6rem;
+    height: 6rem;
+}
+
+/*dash*/
+/* Style the sidebar - fixed full height */
+/* The sidebar menu */
+
+.sidebar {
+  height: 100%; /* 100% Full-height */
+  width: 250px; /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 10; /* Stay on top */
+  top: 0;
+  left: 0;
+  background-color: #4e73df; /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+}
+
+/* The sidebar links */
+.sidebar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #fff;
+  display: block;
+  transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.sidebar .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+/* The button used to open the sidebar */
+.openbtn {
+  display: inline-block;
+  margin : 0px;
+  width: 50px;
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #111;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+}
+
+.openbtn:hover {
+  background-color: #444;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+  transition: margin-left .5s; /* If you want a transition effect */
+  padding: 10px;
+  margin-left: 250px;
+}
+.header{
+  display: grid;
+  background-color: #111;
+  padding: 15px;
+  font-size: 30px;
+  grid-template-columns: 80px auto 10%;
+}
+
+.header h1{
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  grid-column: 2;
+  text-align: center;
+  padding-top: 7px;
+  font-size: 30px;
+  color: white;
+}
+.CerrarSesionBtn{
+  grid-column: 3;
+  
+}
+
+.cerrarBtn{
+  position: absolute;
+  top: 0;
+  right: 25px;
+  background-color: #4e73df;
+  color: #fff;
+  border: none;
+  padding-top: 5px ;
+  font-size: 2.5rem ;
+  text-align: end ;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.ventas{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+  border-radius: 20px;
+  margin: 10px;
+  padding: 20px;
+  background-color: #1b262c;
+  color: #f1f1f1;
+}
+
+.cliente{
+  border-radius: 20px;
+  border-color: #f1f1f1;
+  border-style: solid;
+  border-width: 2px;
+  padding: 10px;
+  margin-bottom: -8px;
+  background-color: #1b262c;
+  color: #f1f1f1;
+}
+#btnGuardar{
+  margin-top: 30px;
+}
+
+/* video*/
+#contenedor video{
+	max-width: 100%;
+	width: 100%;
+}
+#contenedor{
+	max-width: 100%;
+	position:relative;
+}
+
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+
+
+@media screen and (max-width: 550px) {
+  .header{
+      display: grid;
+      background-color: #111;
+      padding: 15px;
+      font-size: 30px;
+      grid-template-columns: 80px auto;
+  }
+  .header h1{
+      display: none;
+    }
+    .CerrarSesionBtn{
+      grid-column: 2;
+      font-size: 2rem;
+      text-align: center;
+    }
+    .openbtn{
+      font-size: 2rem;
+
+    }
+  .sidebar {
+      width: 100%;
+      padding-top: 70px;
+  }
+  .sidebar a {
+      color: #fff;
+      font-size: 2rem;
+      text-align: center;
+  }
+  .ventas{
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-gap: 10px;
+      border-radius: 20px;
+      margin: 10px;
+      padding: 20px;
+      background-color: #1b262c;
+      color: #f1f1f1;
+  }
+  
+  
+}
