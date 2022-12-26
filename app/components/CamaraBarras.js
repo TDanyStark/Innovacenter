@@ -13,7 +13,6 @@ export function CamaraBarras(){
       let $H2 = document.getElementById('resul');
 
       if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-        $H2.textContent = "todo bien 0"
 
         console.log("Let's get this party started")
       }else{
@@ -24,7 +23,6 @@ export function CamaraBarras(){
       navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
         // El usuario ha aceptado el permiso, se puede acceder al stream de la cámara
         camera.srcObject = stream;
-        $H2.textContent = "todo bien 2"
 
       }).catch(function(error) {
         // El usuario ha denegado el permiso o ha ocurrido un error
@@ -42,15 +40,19 @@ export function CamaraBarras(){
             }
           }, function(err) {
             if (err) {
+              $H2.textContent = "iniciando mal"
+
               console.log(err);
               return;
             }
             console.log('Initialization finished. Ready to start');
+            $H2.textContent = "iniciando bien"
             Quagga.start();
           });
           
           Quagga.onDetected(function(result) {
             console.log(result.codeResult.code);
+            $H2.textContent = result.codeResult.code
           });
 
 };
