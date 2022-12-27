@@ -29,33 +29,29 @@ export function CamaraBarras(){
         $H2.textContent = error
        });
 
-
-        Quagga.init({
-            inputStream: {
-              type: 'LiveStream',
-              target: camera
-            },
-            decoder: {
-              readers: ['code_128_reader']
-            }
-          }, function(err) {
-            if (err) {
-              $H2.textContent = "iniciando mal"
-
+       Quagga.init({
+        inputStream : {
+          name : "Live",
+          type : "LiveStream",
+          target: camera    // Or '#yourElement' (optional)
+        },
+        decoder : {
+          readers : ["code_128_reader"]
+        }
+      }, function(err) {
+          if (err) {
               console.log(err);
-              return;
-            }
-            console.log('Initialization finished. Ready to start');
-            Quagga.start();
-            alert("todo bien")
-            $H2.textContent = "iniciando bien"
-          });
-          
-          Quagga.onDetected(function(result) {
-            console.log(result.codeResult.code);
-            alert(result.codeResult.code)
+              return
+          }
+          console.log("Initialization finished. Ready to start");
+          Quagga.start();
+          $H2.textContent = "iniciando bien"
 
-            $H2.textContent = result.codeResult.code
+      });
+          
+          Quagga.decodeSingle ( (data) => {
+            $H2.textContent = data.codeResult.code;
+            Quagga.stop();
           });
 
 };
