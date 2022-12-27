@@ -4,7 +4,7 @@ export function CamaraBarras(){
     const $CAMARABARRAS = document.createElement("div");
     $CAMARABARRAS.classList.add("camarabarras");
     $CAMARABARRAS.innerHTML = /*html*/ `
-        <video id="camera" autoplay></video>
+        <div id="camera" autoplay></div>
         <h2 id="resul"></h2>
     `;
 
