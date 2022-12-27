@@ -47,11 +47,14 @@ export function CamaraBarras(){
             }
             console.log('Initialization finished. Ready to start');
             Quagga.start();
+            alert("todo bien")
             $H2.textContent = "iniciando bien"
           });
           
           Quagga.onDetected(function(result) {
             console.log(result.codeResult.code);
+            alert(result.codeResult.code)
+
             $H2.textContent = result.codeResult.code
           });
 
