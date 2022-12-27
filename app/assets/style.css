@@ -278,6 +278,7 @@ body {
 }
 
 #camera{
+  border: 1px solid #fff;
   position:absolute;
   top:0;
   left:0;
