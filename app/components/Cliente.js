@@ -31,6 +31,8 @@ export function Cliente() {
     $VENTAS.innerHTML = null;
     $VENTAS.appendChild($CLIENTE);
 
+    let onClienteEncontrado = (e) => `style="display: block;"`; 
+        
     const $formCliente = document.querySelector(".formCliente");
     $formCliente.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -48,6 +50,7 @@ export function Cliente() {
         }
 
         console.log($nombre, $celular);
+        // guardarCliente($nombre, $celular);
         
     });
 
@@ -77,6 +80,11 @@ export function Cliente() {
            }
            $nombre.value = existClient.nombre;
            $btnGuardar.style.display = "none";
+            window.editor.publicar('clienteEncontrado', {nombre: existClient.nombre});
+            $nombre.disabled  = true;
+            $celular.disabled  = true;
+
+
         }
         else if (e.target.value.length > 10 ) {
             $celular.classList.add("is-invalid");

@@ -1,7 +1,5 @@
-import { clienteFound } from "../helpers/firebase.js";
 import { Cliente } from "./Cliente.js";
 import { VentaProducto } from "./VentaProducto.js";
-import { CamaraBarras } from "./CamaraBarras.js";
 
 export function Ventas() {
     const $MAIN = document.getElementById("main");
@@ -9,7 +7,12 @@ export function Ventas() {
     $ventas.classList.add("ventas");
     $ventas.id = "ventas";
     $MAIN.appendChild($ventas);
+
+    
     Cliente();
-    CamaraBarras();
     VentaProducto();
+    console.log("inicio suscripción")
+    window.editor.suscribir('clienteEncontrado', VentaProducto);
+    console.log("fin suscripción")
+
 }

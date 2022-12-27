@@ -8,8 +8,26 @@ import { Header } from './Header.js';
 import { Ventas } from './Ventas.js';
 
 export async function Router() {
-    
-
+    window.editor = {
+        suscriptores: {},
+      
+        suscribir(evento, suscriptor) {
+          if (!this.suscriptores[evento]) {
+            this.suscriptores[evento] = [];
+          }
+      
+          this.suscriptores[evento].push(suscriptor);
+        },        
+      
+        publicar(evento, datos) {
+          if (!this.suscriptores[evento]) {
+            return;
+          }
+      
+          this.suscriptores[evento].forEach(suscriptor => suscriptor(datos));
+        },
+      };
+      
     let $app = document.getElementById("app");
 
     let {hash} = location;
@@ -78,6 +96,7 @@ export async function Router() {
             
                 $MAIN.innerHTML = null;
                 Ventas();
+
                 
             }else{
                 $app.innerHTML = null;
