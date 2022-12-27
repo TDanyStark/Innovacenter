@@ -46,8 +46,8 @@ export function CamaraBarras(){
               return;
             }
             console.log('Initialization finished. Ready to start');
-            $H2.textContent = "iniciando bien"
             Quagga.start();
+            $H2.textContent = "iniciando bien"
           });
           
           Quagga.onDetected(function(result) {
