@@ -124,3 +124,37 @@
         return false;
       }
     }
+
+    // guardar en la base datos firestore un producto
+    export let guardarProducto = async (data) => {
+      let {id, descripcion, precio, cantidad_inventario, proveedor} = data;
+      const docData = {
+        id,
+        descripcion,
+        precio,
+        cantidad_inventario,
+        proveedor,
+      }
+      try {
+        const docRef = await setDoc(doc(db, "productos", id), docData);
+        return docRef.id;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // buscar un producto en la base de datos
+    export let buscarProducto = async (id) => {
+      const docRef = doc(db, "productos", id);
+      const docSnap = await getDoc(docRef);
+
+      
+      return new Promise((resolve, reject) => {
+        if (docSnap.exists()) {
+          //retorne el documento
+          resolve(docSnap.data());
+        } else {
+          resolve(false);
+        }
+      });
+    }
