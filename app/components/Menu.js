@@ -6,10 +6,9 @@ export function Menu(props){
             <button class="cerrarBtn">×</button>
             <a class="itemsA" href="#/dashboard">Innova</a>
             <hr />
-            <a class="itemsA" href="#/ventas">Ventas y ST</a>
-            <a class="itemsA" href="#/Services">Services</a>
-            <a class="itemsA" href="#/Clients">Clients</a>
-            ${props == true ? `<a class="itemsA" href="#/Contact">Contact</a>` : ""}
+            <a class="itemsA" href="#/ventas">Ventas</a>
+            <a class="itemsA" href="#/st">Servicios Tecnicos</a>
+            ${props == true ? `<a class="itemsA" href="#/inventario">Inventario</a>` : ""}
         </div>
         <div id="main">
             <h2>Aqui irian las cosas generadas</h2>

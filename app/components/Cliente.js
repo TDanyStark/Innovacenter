@@ -16,14 +16,14 @@ export function Cliente() {
         </div>
         <div class="col-md-4">
             <label for="validationCustom01" class="form-label">Nombre y Apellido</label>
-            <input type="text" class="form-control" id="validationCustom01" value="" required>
+            <input type="text" class="form-control" id="validationCustom01" required>
             <div class="valid-feedback">
                 Todo Bien!
             </div>
         </div>
         
         <div class="col-md-5">
-        <button id="btnGuardar" class="btn btn-primary" type="submit">Guardar</button>
+        <button id="btnGuardarCliente" class="btn btn-primary" type="submit">Guardar</button>
         </div>
     </form>
     `;
@@ -31,7 +31,6 @@ export function Cliente() {
     $VENTAS.innerHTML = null;
     $VENTAS.appendChild($CLIENTE);
 
-    let onClienteEncontrado = (e) => `style="display: block;"`; 
         
     const $formCliente = document.querySelector(".formCliente");
     $formCliente.addEventListener("submit", (e) => {
@@ -56,18 +55,23 @@ export function Cliente() {
 
     const $nombre = document.getElementById("validationCustom01");
     const $celular = document.getElementById("validationCustom05");
-
+    let componenteRenderizado = false;
    $celular.addEventListener("keyup", async (e) => {
-        const $btnGuardar = document.getElementById("btnGuardar");
+        const $btnGuardar = document.getElementById("btnGuardarCliente");
 
+        // Remover evento previamente asignado
+        $celular.removeEventListener("keyup", this);
+
+        
 
         if (e.target.value.length == 10 ) {
+
             $celular.classList.add("is-valid");
            let existClient = await clienteFound(e.target.value);
            if (existClient.nombre == undefined) {
             $nombre.value = "";
             $nombre.focus();
-            $btnGuardar.style.display = "block";
+            $btnGuardar.disabled = false;
 
                Swal.fire({
                    title: "Error!",
@@ -79,8 +83,12 @@ export function Cliente() {
                return;
            }
            $nombre.value = existClient.nombre;
-           $btnGuardar.style.display = "none";
-            window.editor.publicar('clienteEncontrado', {nombre: existClient.nombre});
+           $btnGuardar.disabled = true;
+           if (!componenteRenderizado) {
+                componenteRenderizado = true;
+                window.editor.publicar('clienteEncontrado', {nombre: existClient.nombre});
+            }
+            
             $nombre.disabled  = true;
             $celular.disabled  = true;
 

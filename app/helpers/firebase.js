@@ -128,7 +128,9 @@
     // guardar en la base datos firestore un producto
     export let guardarProducto = async (data) => {
       let {id, descripcion, precio, cantidad_inventario, proveedor} = data;
-      const docData = {
+      // console.log(data);
+      let idEnvio = id;
+      let docData = {
         id,
         descripcion,
         precio,
@@ -136,9 +138,10 @@
         proveedor,
       }
       try {
-        const docRef = await setDoc(doc(db, "productos", id), docData);
-        return docRef.id;
+        await setDoc(doc(db, "productos", id), docData);
+        return true;
       } catch (e) {
+        console.error(e);
         return false;
       }
     }
@@ -157,4 +160,41 @@
           resolve(false);
         }
       });
+    }
+
+    // realizar consulta donde la descripcion contenga la palabra buscada
+    export let buscarProductoDescripcionLike = async (descripcion) => {
+      const querySnapshot = await getDocs(collection(db, "productos"));
+      let docs = [];
+      querySnapshot.forEach((doc) => {
+        // convertir a minusculas
+        descripcion = descripcion.toLowerCase();
+        let info = doc.data().descripcion.toLowerCase();
+
+        if(info.includes(descripcion)){
+          docs.push({id: doc.id, ...doc.data()})
+        }
+      });
+      return docs;
+    }
+
+    //guardar en la base de datos firestore una venta
+    export let guardarVenta = async (data) => {
+      let {cliente, productos, total, descuento} = data;
+      let id = new Date().getTime();
+      id = id.toString();
+      const docData = {
+        id,
+        fecha : Timestamp.fromDate(new Date()),
+        cliente,
+        productos,
+        total,
+        descuento,
+      }
+      try {
+        const docRef = await setDoc(doc(db, "ventas", id), docData);
+        return docRef.id;
+      } catch (e) {
+        return false;
+      }
     }

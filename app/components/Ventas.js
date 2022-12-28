@@ -11,8 +11,8 @@ export function Ventas() {
     
     Cliente();
     VentaProducto();
-    console.log("inicio suscripción")
+    // console.log("inicio suscripción")
     window.editor.suscribir('clienteEncontrado', VentaProducto);
-    console.log("fin suscripción")
+    // console.log("fin suscripción")
 
 }

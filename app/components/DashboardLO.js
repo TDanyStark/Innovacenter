@@ -1,7 +1,7 @@
 import { CerrarSesion } from "../helpers/firebase.js";
 import { Loader } from "./Loader.js";
 
-export function DashboardLO(){
+export async function DashboardLO(){
 
 /* Set the width of the sidebar to 250px and the left margin of the page content to 250px */
     const open = document.querySelector(".openbtn");
@@ -26,7 +26,7 @@ export function DashboardLO(){
         }
 
        
-        setTimeout(() => {
+         setTimeout(() => {
             const elementClose = document.querySelectorAll(".itemsA");
         elementClose.forEach(elemento => {
             elemento.style.display = "";
@@ -34,11 +34,11 @@ export function DashboardLO(){
         }, 500);
 
     }
-    open.addEventListener("click", openNav);
+     open.addEventListener("click", openNav);
     
     
     /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
-    function closeNav() {
+     function closeNav() {
         //guardar el estado en el local storage
         const elementClose = document.querySelectorAll(".itemsA");
         elementClose.forEach(elemento => {

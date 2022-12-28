@@ -263,7 +263,7 @@ body {
   background-color: #1b262c;
   color: #f1f1f1;
 }
-#btnGuardar{
+#btnGuardarCliente{
   margin-top: 30px;
 }
 
@@ -304,6 +304,60 @@ body {
   padding: 0;
   text-align: center;
   font-size: 20px;
+}
+th[scope="col"]:nth-child(3) {
+  width: 5%;
+}
+th[scope="col"]:nth-child(4) {
+  width: 15%;
+}
+th[scope="col"]:nth-child(5) {
+  width: 15%;
+}
+.filaCantidad{
+  width: 80%;
+}
+.inputDescuento{
+  width: 50%;
+}
+.izquierda{
+  text-align: right;
+}
+#resultadosDescripcion{
+  position: absolute;
+  min-width: 400px;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 100;
+  background-color: #3282b8;
+  color: #fff;
+  border-radius: 10px;
+
+}
+#resultadosDescripcion li{
+  list-style: none;
+  padding: 5px;
+  cursor: pointer;
+}
+#resultadosDescripcion li:hover{
+  background-color: #204e6d;
+  color: #fff;
+}
+#resultadosDescripcion li:active{
+  background-color: #204e6d;
+  color: #fff;
+}
+#resultadosDescripcion ul{
+  width: 100%;
+  padding: 0;
+  margin: 0;
+
+}
+#resultadosDescripcion ul li{
+  padding: 0;
+  padding-left: 5px;
+  margin: 0;
 }
 
 
@@ -387,7 +441,19 @@ body {
     z-index: 10;
     
   }
-  
+  tfoot{
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    z-index: 10;
+  }
+  tfoot tr {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: rgb(33, 37, 41);
+  }
   
   
 }

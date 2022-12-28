@@ -1,5 +1,6 @@
 import { Login } from "./components/Login.js";
 import { LoginLO } from "./components/LoginLO.js";
+import { Router } from "./components/Router.js";
 import { estadoChange } from "./helpers/firebase.js";
 
 export async function App(){
@@ -28,13 +29,16 @@ export async function App(){
     //     location.hash = "#/login";
     // }
     
-    console.log(location.hash);
+    // buscar en el local storage el hash y cargar ese hash
+    
+
     if (location.hash != "#/login") {
         location.hash = "#/login";
     }else if (location.hash == "#/login") {
         $app.appendChild(Login());
         LoginLO($app);
     }
+
         
     /////////////////////////////////////////////////////
 }

@@ -8,6 +8,8 @@ import { Header } from './Header.js';
 import { Ventas } from './Ventas.js';
 
 export async function Router() {
+    // metodo Publish-Subscribe para comunicar componentes
+
     window.editor = {
         suscriptores: {},
       
@@ -20,6 +22,7 @@ export async function Router() {
         },        
       
         publicar(evento, datos) {
+
           if (!this.suscriptores[evento]) {
             return;
           }
@@ -32,7 +35,7 @@ export async function Router() {
 
     let {hash} = location;
     // mostrar por consola el pushState
-    console.log(hash);
+    // console.log(hash);
     if(hash == "#/"){
         location.hash = "#/login";
         return;
@@ -50,9 +53,11 @@ export async function Router() {
             if (user) {
                 let userRole = await Admin(user.uid);
                 $app.innerHTML = null;
+
                 $app.appendChild(Header());
                 $app.appendChild(Menu(userRole));
                 DashboardLO();
+
             }else{
                 $app.innerHTML = null;
                 location.hash = "#/login";
@@ -60,9 +65,8 @@ export async function Router() {
         }
         funcionDash();
     }
-    if (hash == "#/Contact") {
+    if (hash.includes("#/inventario")) {
         const $MAIN = document.getElementById("main");
-        
         $MAIN.innerHTML = null;
         $MAIN.appendChild(Loader());
         let funcionDash = async () => {
@@ -72,7 +76,7 @@ export async function Router() {
                 let userRole = await Admin(user.uid);
                 if (userRole == true) {
                     $MAIN.innerHTML = null;
-                    $MAIN.innerHTML = "<h1>Contact</h1>";
+                    $MAIN.innerHTML = "<h1>Inventario</h1>";
                 }else{
                     location.hash = "#/dashboard";
                 }
@@ -81,12 +85,10 @@ export async function Router() {
                 location.hash = "#/login";
             }
         }
-        funcionDash();
-        
+        funcionDash();  
     }
-    if (hash == "#/ventas") {
+    if (hash.includes("#/ventas")) {
         const $MAIN = document.getElementById("main");
-        
         $MAIN.innerHTML = null;
         $MAIN.appendChild(Loader());
         let funcionDash = async () => {
@@ -104,6 +106,6 @@ export async function Router() {
             }
         }
         funcionDash();
-        
     }
+
 }
