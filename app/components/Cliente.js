@@ -1,4 +1,4 @@
-import { clienteFound } from "../helpers/firebase.js";
+import { clienteFound, guardarCliente } from "../helpers/firebase.js";
 export function Cliente() {
     const $VENTAS = document.getElementById("ventas");
   const $CLIENTE = document.createElement("div");
@@ -33,10 +33,10 @@ export function Cliente() {
 
         
     const $formCliente = document.querySelector(".formCliente");
-    $formCliente.addEventListener("submit", (e) => {
+    $formCliente.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const $nombre = document.getElementById("validationCustom01").value;
-        const $celular = document.getElementById("validationCustom05").value;
+        let $nombre = document.getElementById("validationCustom01").value;
+        let $celular = document.getElementById("validationCustom05").value;
 
         if ($nombre === "" || $celular === "") {
             Swal.fire({
@@ -48,9 +48,33 @@ export function Cliente() {
             return;
         }
 
-        console.log($nombre, $celular);
-        // guardarCliente($nombre, $celular);
-        
+        let result = await guardarCliente({$nombre, $celular});
+        console.log(result);
+        if (result) {
+            Swal.fire({
+                title: "Exito!",
+                text: "Cliente registrado",
+                icon: "success",
+                confirmButtonText: "Cerrar",
+            });
+            
+            document.getElementById("btnGuardarCliente").disabled = true;
+           if (!componenteRenderizado) {
+                componenteRenderizado = true;
+                window.editor.publicar('clienteEncontrado', {nombre: $nombre});
+            }
+            
+            document.getElementById("validationCustom01").disabled  = true;
+            document.getElementById("validationCustom05").disabled  = true;
+        } else {
+            Swal.fire({
+                title: "Error!",
+                text: "No se pudo registrar el cliente",
+                icon: "error",
+                confirmButtonText: "Cerrar",
+            });
+        }
+
     });
 
     const $nombre = document.getElementById("validationCustom01");

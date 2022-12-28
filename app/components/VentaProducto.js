@@ -397,7 +397,7 @@ export function VentaProducto(props) {
             let $inventario = parseInt($formModal.cantidadInventario.value);
             let $proveedor = $formModal.proveedor.value;
 
-            
+            // retornar si alguno de los campos esta vacio
 
             let dataNewProduct = {
                 id: $id,
@@ -406,8 +406,17 @@ export function VentaProducto(props) {
                 cantidad_inventario: $inventario,
                 proveedor: $proveedor
             }
-
             console.log(dataNewProduct);
+            if($id === "" || $descripcion === "" || $precio === "" || $inventario === "" || $proveedor === ""){
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Todos los campos son obligatorios",
+                });
+                return;
+            }
+
+
             let result = await guardarProducto(dataNewProduct);
             console.log(result);
             if(result){

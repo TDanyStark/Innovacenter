@@ -111,17 +111,17 @@
 
     // guardar en la base de datos firestore
     export let guardarCliente = async (data) => {
-      let {celular, nombre} = data;
+      let {$celular, $nombre} = data;
       const docData = {
-        celular,
-        nombre,
+        celular : $celular,
+        nombre : $nombre,
         fecha_creacion: Timestamp.fromDate(new Date())
       }
       try {
-        const docRef = await setDoc(doc(db, "clientes", celular), docData);
-        return docRef.id;
+        await setDoc(doc(db, "clientes", $celular), docData);
+        return true;
       } catch (e) {
-        return false;
+        return e;
       }
     }
 
