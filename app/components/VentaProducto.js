@@ -202,6 +202,7 @@ export function VentaProducto(props) {
         return $filaTabla;
     }
 
+    // busqueda de productos por id
     $busquedaID.addEventListener("change", async (e) => {
 
         // revisar si el input esta vacio, si lo esta retornar
@@ -274,6 +275,7 @@ export function VentaProducto(props) {
 
     });
 
+    // buscar producto por descripcion
     $busquedaDescripcion.addEventListener("input", async (e) => {
         // revisar si el input esta vacio o si es menor a 3, si lo esta retornar
         if (e.target.value === "" || e.target.value.length < 3) {
@@ -285,7 +287,7 @@ export function VentaProducto(props) {
 
         const $resultadosDescripcion = document.querySelector("#resultadosDescripcion ul");
 
-        //eliminar clase de un elemento
+        //eliminar clase d-none para mostrar los resultados
         $resultadosDescripcion.classList.remove("d-none");
 
         //limpiar el ul para que no se repitan los resultados
@@ -302,6 +304,8 @@ export function VentaProducto(props) {
             const $li = document.createElement("li");
             $li.classList.add("list-group-item");
 
+            // la clase list-resultados-busqueda es para poder seleccionar con la tecla enter
+            $li.classList.add("list-resultados-busqueda");
             $li.dataset.id = producto.id;
 
             //añadirle tabindex para que se pueda seleccionar con el teclado
@@ -313,11 +317,13 @@ export function VentaProducto(props) {
     });
     
     document.addEventListener("keydown", (e) => {
+
+        // cuando el evento keydown se dispara en la lista de resultados de busqueda
        if (e.target.classList.contains("list-resultados-busqueda")) {
-            //obtener el elemento que tiene focus
             if (e.key === "Enter") {
                 const $elementoFocus = document.activeElement;
                 $busquedaDescripcion.value = $elementoFocus.textContent;
+                console.log($elementoFocus);
                 $busquedaID.value = $elementoFocus.dataset.id;
                 $busquedaID.focus();
                 const $resultadosDescripcion = document.querySelector("#resultadosDescripcion ul");
@@ -335,8 +341,9 @@ export function VentaProducto(props) {
     });
 
 
-  document.addEventListener("input", (e) => {
-    if (e.target.classList.contains("filaCantidad")) {
+    document.addEventListener("input", (e) => {
+        // si se cambia el input de cantidad en la tabla de venta se recalcula el total
+        if (e.target.classList.contains("filaCantidad")) {
             const $filaTabla = e.target.parentElement.parentElement;
             const $tablaVTotal = $filaTabla.querySelector("#tablaVTotal");
             const $tablaVUnitario = $filaTabla.querySelector("#tablaVUnitario");
@@ -365,7 +372,9 @@ export function VentaProducto(props) {
             // sumar el total de la venta
             sumarTotal()
         }
-    if (e.target.classList.contains("inputDescuento")) {
+
+        // si se cambia el input de descuento en la tabla de venta se recalcula el total
+        if (e.target.classList.contains("inputDescuento")) {
             if (document.querySelector("#tablaVTotal") === null) {
                 Swal.fire({
                     icon: "error",
@@ -390,25 +399,30 @@ export function VentaProducto(props) {
             sumarTotal()
         }
 
-        // para que el id busqueda se ponga en mayusculas
+        // para que el id busqueda se ponga en mayusculas instantaneamente
         if (e.target.id === "busquedaID" || e.target.id === "idProducto") {
             e.target.value = e.target.value.toUpperCase();
         }
 
     });
-    // eliminar fila de la tabla
+
     document.addEventListener("click", async (e) => {
+        // eliminar fila de la tabla
         if (e.target.id === "btnEliminar") {
-            // eliminar el elemento padre del elemento que se le dio click
+            // console.log(e.target.parentElement.parentElement);
+            // eliminar el elemento padre del elemento padre del elemento al que se le dio click
             e.target.parentElement.parentElement.remove();
             
             //focus en el input de busqueda por id
             $busquedaID.focus();
 
-            // sumar el total de la venta
+            // recalcular el total de la venta
             sumarTotal()
+            return;
         }
 
+        // cuando se le de click a un elemento de la lista de resultados de busqueda, 
+        // se pone el texto del elemento en el input de busqueda por descripcion y se oculta la lista
         if(e.target.classList.contains("list-group-item")){
             $busquedaDescripcion.value = e.target.textContent;
             $busquedaID.value = e.target.dataset.id;
@@ -416,27 +430,18 @@ export function VentaProducto(props) {
 
             // esto es para que se dispare el evento change del input de busqueda por ID
             $busquedaID.dispatchEvent(new Event("change"));
-
+            return;
         }
 
-        if(e.target.id === "btnCobrarVenta"){
-            if (document.querySelector("#tablaVTotal") === null) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "No hay productos agregados",
-                });
-                return;
-            }
-            // guardarVenta();
-        }
+        // para volver a habilitar los inputs de cliente 
         if(e.target.id === "validationCustom01" || e.target.id === "validationCustom05"){
             document.querySelector("#btnGuardarCliente").disabled = false;
             document.getElementById("validationCustom01").disabled = false;
             document.getElementById("validationCustom05").disabled = false;
+            return;
         }
 
-        //guardar producto
+        //guardar producto en la ventana modal
         if(e.target.id === "btnAgregarProducto"){
             let $formModal = document.getElementById("form-modal-add-product");
             let $id = $formModal.Modalid.value;
@@ -445,8 +450,7 @@ export function VentaProducto(props) {
             let $inventario = parseInt($formModal.cantidadInventario.value);
             let $proveedor = $formModal.proveedor.value;
 
-            // retornar si alguno de los campos esta vacio
-
+            
             let dataNewProduct = {
                 id: $id,
                 descripcion: $descripcion,
@@ -454,7 +458,8 @@ export function VentaProducto(props) {
                 cantidad_inventario: $inventario,
                 proveedor: $proveedor
             }
-            console.log(dataNewProduct);
+            
+            // retornar si alguno de los campos esta vacio
             if($id === "" || $descripcion === "" || $precio === "" || $inventario === "" || $proveedor === ""){
 
                 Swal.fire({
@@ -479,7 +484,7 @@ export function VentaProducto(props) {
                 return;
             }
 
-
+            // guaradar producto en la base de datos
             let result = await guardarProducto(dataNewProduct);
             console.log(result);
             if(result){
@@ -510,11 +515,23 @@ export function VentaProducto(props) {
                 });
                 $formModal.reset();
                 //ocultar modal de agregar producto
-                $modalAgregarProducto.hide();
-                
+                $modalAgregarProducto.hide();       
             }
+            return;
         }
 
+        if(e.target.id === "btnCobrarVenta"){
+            if (document.querySelector("#tablaVTotal") === null) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "No hay productos agregados",
+                });
+                return;
+            }
+            // verificar que usuario esta realizando la venta
+            
+            // guardarVenta();
+        }
     });
-
 }
