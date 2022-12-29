@@ -6,7 +6,9 @@ import { Loader } from './Loader.js';
 
     const d = document;
     const formlogin = d.getElementById("loginform");
+
     const formSubmitHandler = (e) => {
+
         $app.innerHTML = null;
         $app.appendChild(Loader());
 
@@ -14,7 +16,6 @@ import { Loader } from './Loader.js';
         function cbSuccess(user){
             // console.log("logueado", user)
             formlogin.reset();
-
             location.hash = "#/dashboard";
 
             // Creo que esto simula un componente que se desmonta
@@ -36,8 +37,6 @@ import { Loader } from './Loader.js';
         }
         signInEmail(formlogin.usuario.value, formlogin.password.value, cbSuccess, cbError);
     };
-    
     formlogin.addEventListener("submit", formSubmitHandler);
 
-    
 }

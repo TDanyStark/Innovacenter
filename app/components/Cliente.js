@@ -143,8 +143,4 @@ export function Cliente() {
 
     });
 
-    
-    
-  
-
 }

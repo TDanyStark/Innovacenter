@@ -77,13 +77,14 @@ export function VentaProducto(props) {
     // esta variable es para luego inicializar el modal y poder usarlo en toda la función
     let $modalAgregarProducto;
 
+    // variable donde va a quedar guardado edescuento
+    let descuento = 0;
+
     //funcion para separar por miles el precio
     let milesFuncion = (precio) => "$ " + precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 
     // funcion que suma el total de la venta
     function sumarTotal() {
-        // Obtener el descuento
-        let descuento = parseInt(document.querySelector("#filaDescuento input").value);
 
         // Si el descuento no es un número o esta vacio, asignarle 0
         if (isNaN(descuento)) {
@@ -99,6 +100,8 @@ export function VentaProducto(props) {
                 totalVenta += valorFila;
             });
 
+            document.querySelector("#totalVenta").dataset.totalfordescuento = totalVenta;
+
             // Restar el descuento
             totalVenta -= descuento;
 
@@ -106,6 +109,7 @@ export function VentaProducto(props) {
             document.querySelector("#totalVenta").textContent = "$ " + totalVenta.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             // agregarle un dataset al boton cobrar para poder enviar el total de la venta
             document.querySelector("#totalVenta").dataset.total = totalVenta;
+        return;
     }
 
     // lanzar una ventana modal con los inputs para agregar un nuevo producto
@@ -233,6 +237,9 @@ export function VentaProducto(props) {
                     Swal.fire('Intenta Buscar por Descripcion', '', 'info')
                     $busquedaID.value = "";
                     $busquedaDescripcion.focus();
+                }else{
+                    $busquedaID.value = "";
+                    $busquedaDescripcion.focus();
                 }
             });            
             return;
@@ -340,6 +347,39 @@ export function VentaProducto(props) {
 
     });
 
+    document.addEventListener("change", async (e) => {
+        // si se cambia el input de descuento en la tabla de venta se recalcula el total
+        if (e.target.classList.contains("inputDescuento")) {
+            if (document.querySelector("#tablaVTotal") === null) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "No hay productos en la tabla de venta",
+                });
+                //input descuento en 0
+                document.querySelector(".inputDescuento").value = null;
+                descuento = 0;
+                return;
+            }
+            sumarTotal()
+
+            descuento = parseInt(e.target.value);
+            //si el descuento es mayor a lo que da el total de la venta retornar
+            let totalVentaD = parseInt(document.querySelector("#totalVenta").dataset.totalfordescuento);
+            if (parseInt(e.target.value) > totalVentaD) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "El descuento no puede ser mayor al total de la venta",
+                });
+                //input descuento en 0
+                document.querySelector(".inputDescuento").value = null;
+                descuento = 0;
+            }
+            // sumar el total de la venta
+            sumarTotal()
+        }   
+    });
 
     document.addEventListener("input", (e) => {
         // si se cambia el input de cantidad en la tabla de venta se recalcula el total
@@ -373,31 +413,6 @@ export function VentaProducto(props) {
             sumarTotal()
         }
 
-        // si se cambia el input de descuento en la tabla de venta se recalcula el total
-        if (e.target.classList.contains("inputDescuento")) {
-            if (document.querySelector("#tablaVTotal") === null) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "No hay productos en la tabla de venta",
-                });
-                e.target.value = null;
-                return;
-            }
-
-            //si el descuento es mayor a lo que da el total de la venta retornar
-            let totalVentaD = parseInt(document.querySelector("#totalVenta").dataset.total);
-            if (parseInt(e.target.value) > totalVentaD) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "El descuento no puede ser mayor al total de la venta",
-                });
-                e.target.value = null;
-            }
-            // sumar el total de la venta
-            sumarTotal()
-        }
 
         // para que el id busqueda se ponga en mayusculas instantaneamente
         if (e.target.id === "busquedaID" || e.target.id === "idProducto") {
@@ -417,9 +432,15 @@ export function VentaProducto(props) {
             $busquedaDescripcion.value = "";
             $busquedaID.value = "";
             $busquedaID.focus();
+            
+            //input descuento en 0
+            document.querySelector(".inputDescuento").value = null;
+            descuento = 0;
 
-            // recalcular el total de la venta
+
+            // sumar el total de la venta
             sumarTotal()
+            
             return;
         }
 

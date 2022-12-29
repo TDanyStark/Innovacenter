@@ -1,7 +1,11 @@
   // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+    import { getAuth, 
+      signInWithEmailAndPassword, 
+      onAuthStateChanged, 
+      signOut  
+    } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
     // import firestore
     import { 
       getFirestore, 
@@ -15,6 +19,7 @@
       Timestamp, 
       setDoc 
     } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+
   // Your web app's Firebase configuration
     const firebaseConfig = {
         apiKey: "AIzaSyC6PdFpNxQilnubzDnIeB4wedMgD-Nlv6o",
@@ -29,8 +34,21 @@
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
 
-    const auth = getAuth();
-    export let signInEmail = (email, password, cbSuccess, cbError) => {         
+    let auth = getAuth();
+    let estadoSesion = null;
+    
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+          estadoSesion = user;
+      } else {
+          estadoSesion = false;
+      }
+    });
+
+    
+
+    export let signInEmail = (email, password, cbSuccess, cbError) => { 
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Signed in 
@@ -45,18 +63,6 @@
         });
     }
 
-    export let estadoChange = async () => {
-      return new Promise((resolve, reject) => {
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-            resolve(user);
-          } else {
-            resolve(false);
-          }
-        });
-      });
-    }
-    
     export let CerrarSesion = (cbSuccess, cbError) => {
       auth.signOut().then(() => {
         // Sign-out successful.
@@ -198,3 +204,4 @@
         return false;
       }
     }
+    export {estadoSesion}

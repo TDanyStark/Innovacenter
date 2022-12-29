@@ -1,44 +1,50 @@
-import { Login } from "./components/Login.js";
-import { LoginLO } from "./components/LoginLO.js";
-import { Router } from "./components/Router.js";
-import { estadoChange } from "./helpers/firebase.js";
+import { estadoSesion } from "./helpers/firebase.js";
 
 export async function App(){
+    
+    // esperar a que estadosesion sea true
+    if (estadoSesion == null) {
+        setTimeout(() => {
+            App();
+        }, 250);
+        return;
+    }
+
     const d = document,
     $app = d.getElementById("app");
     $app.innerHTML = null;
-
-    let funcionApp = async () => {
-
-        let user = await estadoChange();
-
-        if (user) {
-            location.hash = "#/dashboard";
-        }else{
-            location.hash = "#/login";
-        }
-    }
-    funcionApp();
-
-    // estadoChange(cbSuccess, cbDeslogueado);
-    // function cbSuccess(user){
-    //     // console.log("logueado", user)
-    //     location.hash = "#/dashboard";
-    // }
-    // function cbDeslogueado(){
-    //     location.hash = "#/login";
-    // }
-    
-    // buscar en el local storage el hash y cargar ese hash
-    
-
     if (location.hash != "#/login") {
+        let elHASH = location.hash;
+        location.hash = "#/logout";
+        location.hash = elHASH;
+
+    }
+    else if (location.hash == "#/login") {
+        location.hash = "#/logout";
         location.hash = "#/login";
-    }else if (location.hash == "#/login") {
-        $app.appendChild(Login());
-        LoginLO($app);
     }
 
-        
-    /////////////////////////////////////////////////////
+    //   });
+    
+    // const d = document,
+    // $app = d.getElementById("app");
+    // $app.innerHTML = null;
+
+    // // cuando se carga el DOM se ejecuta la funcion para verificar el estado del usuario
+    // // si el usuario esta logueado se lleva al dashboard
+    // // si el usuario no esta logueado se lleva al login
+    // // el #/dd es un hash que se usa para redireccionar al dashboard
+    // // estadoChange().then((user) => {
+    // //     console.log(user);
+    // //     if (user) {
+    // //         location.hash = "#/dd";  
+    // //     }else{
+    //         if (location.hash != "#/login") {
+    //             location.hash = "#/login";
+    //         }else if (location.hash == "#/login") {
+    //             location.hash = "#/";
+    //         }
+    //     }
+    //     return;
+    // })
 }

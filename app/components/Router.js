@@ -1,15 +1,15 @@
 import { Loader } from './Loader.js';
 import { Login } from './Login.js';
 import {LoginLO} from './LoginLO.js';
-import { estadoChange, Admin } from '../helpers/firebase.js';
+import { Admin, estadoSesion } from '../helpers/firebase.js';
 import { DashboardLO } from './DashboardLO.js';
 import { Menu } from './Menu.js';
 import { Header } from './Header.js';
 import { Ventas } from './Ventas.js';
 
 export async function Router() {
+    console.log("Router", estadoSesion);
     // metodo Publish-Subscribe para comunicar componentes
-
     window.editor = {
         suscriptores: {},
       
@@ -36,76 +36,69 @@ export async function Router() {
     let {hash} = location;
     // mostrar por consola el pushState
     // console.log(hash);
-    if(hash == "#/"){
-        location.hash = "#/login";
+    if (hash == "#/logout"){
         return;
     }
     
-    if (hash == "#/login") {
+    else if (hash == "#/login") {
+        if (estadoSesion) {
+            location.hash = "#/dashboard";
+            return;
+        }
         $app.innerHTML = null;
         $app.appendChild(Login());
-            LoginLO($app);
+        LoginLO($app);
+        return;        
     }
-    if (hash.includes("#/dashboard")) {
-        let funcionDash = async () => {
-            // estadoChange me devuelve un usuario si este se encuentra logueado si no devuelve null
-            let user = await estadoChange();
-            if (user) {
-                let userRole = await Admin(user.uid);
-                $app.innerHTML = null;
 
-                $app.appendChild(Header());
-                $app.appendChild(Menu(userRole));
-                DashboardLO();
-
-            }else{
-                $app.innerHTML = null;
-                location.hash = "#/login";
-            }
+    else if (hash.includes("#/dashboard")) {
+        if (!estadoSesion) {
+            location.hash = "#/login";
+            return;
         }
-        funcionDash();
+        let userRole = await Admin(estadoSesion.uid);
+        $app.innerHTML = null;
+
+        $app.appendChild(Header());
+        $app.appendChild(Menu(userRole));
+        DashboardLO();    
+        return;
     }
-    if (hash.includes("#/inventario")) {
+    
+    else if (hash.includes("#/ventas")) {
+        if (!estadoSesion) {
+            location.hash = "#/login";
+            return;
+        }
+
         const $MAIN = document.getElementById("main");
         $MAIN.innerHTML = null;
         $MAIN.appendChild(Loader());
-        let funcionDash = async () => {
-            // estadoChange me devuelve un usuario si este se encuentra logueado si no devuelve null
-            let user = await estadoChange();
-            if (user) {
-                let userRole = await Admin(user.uid);
-                if (userRole == true) {
-                    $MAIN.innerHTML = null;
-                    $MAIN.innerHTML = "<h1>Inventario</h1>";
-                }else{
-                    location.hash = "#/dashboard";
-                }
-            }else{
-                $app.innerHTML = null;
-                location.hash = "#/login";
-            }
-        }
-        funcionDash();  
+        $MAIN.innerHTML = null;
+        Ventas();
+        return;
     }
-    if (hash.includes("#/ventas")) {
+
+    else if (hash.includes("#/inventario")) {
+        if (!estadoSesion) {
+            location.hash = "#/login";
+            return;
+        }
+
         const $MAIN = document.getElementById("main");
         $MAIN.innerHTML = null;
         $MAIN.appendChild(Loader());
-        let funcionDash = async () => {
-            // estadoChange me devuelve un usuario si este se encuentra logueado si no devuelve null
-            let user = await estadoChange();
-            if (user) {
-            
-                $MAIN.innerHTML = null;
-                Ventas();
-
-                
-            }else{
-                $app.innerHTML = null;
-                location.hash = "#/login";
-            }
+        let userRole = await Admin(estadoSesion.uid);
+        if (userRole == true) {
+            $MAIN.innerHTML = null;
+            $MAIN.innerHTML = "<h1>Inventario</h1>";
+        }else{
+            location.hash = "#/dashboard";
         }
-        funcionDash();
+        return;
     }
-
+    else{
+        location.hash = "#/login";
+        return;
+    }
 }
