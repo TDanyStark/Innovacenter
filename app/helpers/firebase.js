@@ -208,7 +208,7 @@
 
     //guardar en la base de datos firestore una venta
     export let guardarVenta = async (data) => {
-      let {cliente, productos, total, descuento} = data;
+      let {cliente, productos, total, descuento, vendedor} = data;
       let id = new Date().getTime();
       id = id.toString();
       const docData = {
@@ -218,11 +218,14 @@
         productos,
         total,
         descuento,
+        vendedor,
       }
+      // console.log(docData);
       try {
-        const docRef = await setDoc(doc(db, "ventas", id), docData);
-        return docRef.id;
+        await setDoc(doc(db, "ventas", id), docData);
+        return true
       } catch (e) {
+        console.log(e);
         return false;
       }
     }

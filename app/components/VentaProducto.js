@@ -566,9 +566,37 @@ export function VentaProducto(props) {
                 });
                 return;
             }
+            
             // verificar que usuario esta realizando la venta
             console.log(estadoSesion.email);
-            // guardarVenta();
+
+            // obtener los productos de la venta
+            let productosVenta = [];
+            let $filasTabla = document.querySelectorAll("#tablaVenta tbody tr");
+            $filasTabla.forEach((fila) => {
+                let producto = {
+                    id: fila.children[0].textContent,
+                    descripcion: fila.children[1].textContent,
+                    precio: fila.children[2].textContent,
+                    cantidad: fila.children[3].textContent,
+                    total: fila.children[4].textContent,
+                };
+                productosVenta.push(producto);
+            });
+
+            // obtener el total de la venta en numero
+            let total = parseInt(document.querySelector("#totalVenta").getAttribute("data-total"));
+            //cliente, productos, total, descuento, vendedor
+            let dataVenta = {
+                cliente: document.querySelector("#validationCustom01").value,
+                productos: productosVenta,
+                total,
+                descuento: document.querySelector(".inputDescuento").value,
+                vendedor: estadoSesion.email
+            }
+
+            let res = await guardarVenta(dataVenta);
+            console.log(res);
         }
     });
 }
