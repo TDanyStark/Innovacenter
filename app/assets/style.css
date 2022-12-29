@@ -326,7 +326,7 @@ th[scope="col"]:nth-child(5) {
 #resultadosDescripcion{
   position: absolute;
   min-width: 400px;
-  max-height: 200px;
+  max-height: 150px;
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 100;
@@ -358,6 +358,11 @@ th[scope="col"]:nth-child(5) {
   padding: 0;
   padding-left: 5px;
   margin: 0;
+}
+
+#resultadosDescripcion ul li:focus{
+  background-color: #245a7e;
+  color: #fff;
 }
 
 

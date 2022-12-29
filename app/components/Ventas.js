@@ -10,9 +10,11 @@ export function Ventas() {
 
     
     Cliente();
+    
+    // la primera vez que se carga la página, no hay cliente
     VentaProducto();
-    // console.log("inicio suscripción")
+
+    // cuando se encuentra un cliente, se carga la tabla venta de productos
     window.editor.suscribir('clienteEncontrado', VentaProducto);
-    // console.log("fin suscripción")
 
 }

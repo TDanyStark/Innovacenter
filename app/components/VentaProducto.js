@@ -127,7 +127,7 @@ export function VentaProducto(props) {
                 <div class="modal-content bg-dark">
                     <div class="modal-header">
                         <h5 class="modal-title">Agregar Producto</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" tabindex="-1"></button>
                     </div>
                     <div class="modal-body">
                         <form id="form-modal-add-product">
@@ -164,8 +164,13 @@ export function VentaProducto(props) {
         $modalAgregarProducto = new bootstrap.Modal($modal);
         $modalAgregarProducto.show();
 
+        // setTimeout(() => {
+        //     document.getElementById("btnAgregarProducto").focus();
+        // }, 400);
 
     }
+
+
 
     //funcion que asincrona que revisa si ya existe el producto en la tabla de venta
     async function revisarProducto(id) {
@@ -218,6 +223,7 @@ export function VentaProducto(props) {
                 const ID = $busquedaID.value;
                 modalAgregarProducto(ID);
 
+
             //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
               Swal.fire('Intenta Buscar por Descripcion', '', 'info')
@@ -267,7 +273,7 @@ export function VentaProducto(props) {
         if (e.target.value === "" || e.target.value.length < 3) {
             return;
         }
-
+        //realizar consulta a la base de datos productos por descripcion
         let resultado = await buscarProductoDescripcionLike(e.target.value);
         const $resultadosDescripcion = document.querySelector("#resultadosDescripcion ul");
 
@@ -275,21 +281,43 @@ export function VentaProducto(props) {
         $resultadosDescripcion.classList.remove("d-none");
 
         $resultadosDescripcion.innerHTML = "";
-        let contador = 0;
         resultado.forEach((producto) => {
-            contador++;
-            if (contador >= 5) {
-                return;
-            }
             const $li = document.createElement("li");
             $li.classList.add("list-group-item");
+            $li.classList.add("list-resultados-busqueda");
+
             $li.dataset.id = producto.id;
+            //añadirle tabindex para que se pueda seleccionar con el teclado
+            $li.tabIndex = 0;
             $li.textContent = producto.descripcion;
             $resultadosDescripcion.appendChild($li);
 
             
         });
     });
+    
+    document.addEventListener("keydown", (e) => {
+       if (e.target.classList.contains("list-resultados-busqueda")) {
+            //obtener el elemento que tiene focus
+            if (e.key === "Enter") {
+                const $elementoFocus = document.activeElement;
+                $busquedaDescripcion.value = $elementoFocus.textContent;
+                $busquedaID.value = $elementoFocus.dataset.id;
+                $busquedaID.focus();
+                const $resultadosDescripcion = document.querySelector("#resultadosDescripcion ul");
+                $resultadosDescripcion.classList.add("d-none");
+
+                //disparar el evento change del input de busqueda por id
+                $busquedaID.dispatchEvent(new Event("change"));
+            }
+        }
+        if (e.key === "Escape") {
+            const $resultadosDescripcion = document.querySelector("#resultadosDescripcion ul");
+            $resultadosDescripcion.classList.add("d-none");
+        }
+
+    });
+
 
   document.addEventListener("input", (e) => {
     if (e.target.classList.contains("filaCantidad")) {
@@ -355,7 +383,12 @@ export function VentaProducto(props) {
     // eliminar fila de la tabla
     document.addEventListener("click", async (e) => {
         if (e.target.id === "btnEliminar") {
+            // eliminar el elemento padre del elemento que se le dio click
             e.target.parentElement.parentElement.remove();
+            
+            //focus en el input de busqueda por id
+            $busquedaID.focus();
+
             // sumar el total de la venta
             sumarTotal()
         }
@@ -379,7 +412,6 @@ export function VentaProducto(props) {
                 });
                 return;
             }
-            let compra
             // guardarVenta();
         }
         if(e.target.id === "validationCustom01" || e.target.id === "validationCustom05"){
@@ -408,11 +440,26 @@ export function VentaProducto(props) {
             }
             console.log(dataNewProduct);
             if($id === "" || $descripcion === "" || $precio === "" || $inventario === "" || $proveedor === ""){
+
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
                     text: "Todos los campos son obligatorios",
                 });
+
+                // hacer focus en el primer input vacio
+                if($id === ""){
+                    $formModal.Modalid.focus();
+                }else if($descripcion === ""){
+                    $formModal.descripcion.focus();
+                }else if($precio === ""){
+                    $formModal.precio.focus();
+                }else if($inventario === ""){
+                    $formModal.cantidadInventario.focus();
+                }else if($proveedor === ""){
+                    $formModal.proveedor.focus();
+                }
+
                 return;
             }
 
@@ -429,12 +476,26 @@ export function VentaProducto(props) {
                 //ocultar modal de agregar producto
                 $modalAgregarProducto.hide();
 
+                // agregar producto a la tabla de productos
+                dataNewProduct = {
+                    id: $id,
+                    descripcion: $descripcion,
+                    precio: $precio,
+                    inventario: $inventario,
+                }
+                let $bodyTabla = document.querySelector("#bodyTabla");
+                $bodyTabla.appendChild(newFilaTablaVenta(dataNewProduct));
+
             }else{
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
                     text: "El producto no se agregó, intentalo nuevamente",
                 });
+                $formModal.reset();
+                //ocultar modal de agregar producto
+                $modalAgregarProducto.hide();
+                
             }
         }
 
