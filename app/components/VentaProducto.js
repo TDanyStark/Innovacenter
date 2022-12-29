@@ -1,88 +1,91 @@
 import { buscarProducto, buscarProductoDescripcionLike, guardarProducto, guardarVenta } from "../helpers/firebase.js";
 
 export function VentaProducto(props) {
-//   console.log(props);
-  // este coindicional es para que no se ejecute la función si no hay un cliente seleccionado
-  if (props == undefined) {
-    return;
-  }
-  const $VENTAS = document.getElementById("ventas");
-  const $TABLAVENTA = document.createElement("div");
-  $TABLAVENTA.classList.add("ventaproducto");
-  $TABLAVENTA.id = "ventaproducto";
-  $TABLAVENTA.innerHTML = null;
-  $TABLAVENTA.innerHTML = /*html*/ `
-        <div class="tablaBusqueda">
-            <h3>Busqueda de Productos</h3>
-            <hr />
-            <table class="table table-dark table-striped">
-                <thead>
+    // console.log(props);
+    // este coindicional es para que no se ejecute la función si no hay un cliente seleccionado
+    if (props == undefined) {
+        return;
+    }
+    const $VENTAS = document.getElementById("ventas");
+    const $TABLAVENTA = document.createElement("div");
+    $TABLAVENTA.classList.add("ventaproducto");
+    $TABLAVENTA.id = "ventaproducto";
+    $TABLAVENTA.innerHTML = null;
+    $TABLAVENTA.innerHTML = /*html*/ `
+            <div class="tablaBusqueda">
+                <h3>Busqueda de Productos</h3>
+                <hr />
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Descripcion</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTablaBusqueda">
+                        <tr>
+                            <td data-th="ID: " ><input class="busquedaID" id="busquedaID" type="text" /></td>
+                            <td data-th="Descripcion: ">
+                                <input class="busquedaDescripcion" id="busquedaDescripcion" type="text" />
+                                <div id="resultadosDescripcion">
+                                    <ul>
+                                        
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+                <hr />
+                <h3>Venta o ST</h3>
+                <hr />
+            <div class="tablaProductos">
+                <table class="table table-dark table-striped">
+                    <thead>
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Descripcion</th>
+                        <th scope="col" style="max-width: 10%">Cantidad</th>
+                        <th scope="col">V. Unitario</th>
+                        <th scope="col" style="min-width: 15%">V. Total</th>
+                        <th scope="col">Accion</th>
+
                     </tr>
-                </thead>
-                <tbody id="bodyTablaBusqueda">
-                    <tr>
-                        <td data-th="ID: " ><input class="busquedaID" id="busquedaID" type="text" /></td>
-                        <td data-th="Descripcion: ">
-                            <input class="busquedaDescripcion" id="busquedaDescripcion" type="text" />
-                            <div id="resultadosDescripcion">
-                                <ul>
-                                    
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-            <hr />
-            <h3>Venta o ST</h3>
-            <hr />
-        <div class="tablaProductos">
-            <table class="table table-dark table-striped">
-                <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Descripcion</th>
-                    <th scope="col" style="max-width: 10%">Cantidad</th>
-                    <th scope="col">V. Unitario</th>
-                    <th scope="col" style="min-width: 15%">V. Total</th>
-                    <th scope="col">Accion</th>
+                    </thead>
+                    <tbody id="bodyTabla">
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="tfootDescuento bg-dark">Descuento</td>
+                            <td id="filaDescuento"><input class="inputDescuento" type="number" /></td>
+                            <td class="izquierda phoneNone" colspan="2">Total: </td>
+                            <td id="totalVenta">$ 0</td>
+                            <td><button type="button" class="btn btn-primary" id="btnCobrarVenta">Cobrar</button></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        `;
 
-                </tr>
-                </thead>
-                <tbody id="bodyTabla">
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td class="tfootDescuento bg-dark">Descuento</td>
-                        <td id="filaDescuento"><input class="inputDescuento" type="number" /></td>
-                        <td class="izquierda phoneNone" colspan="2">Total: </td>
-                        <td id="totalVenta">$ 0</td>
-                        <td><button type="button" class="btn btn-primary" id="btnCobrarVenta">Cobrar</button></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    `;
-  $VENTAS.appendChild($TABLAVENTA);
+    $VENTAS.appendChild($TABLAVENTA);
 
-  const $bodyTabla = document.getElementById("bodyTabla");
-  const $busquedaID = document.getElementById("busquedaID");
-  const $busquedaDescripcion = document.getElementById("busquedaDescripcion");
+    const $bodyTabla = document.getElementById("bodyTabla");
+    const $busquedaID = document.getElementById("busquedaID");
+    const $busquedaDescripcion = document.getElementById("busquedaDescripcion");
 
-  let $modalAgregarProducto;
+    // esta variable es para luego inicializar el modal y poder usarlo en toda la función
+    let $modalAgregarProducto;
 
-  //separar por miles el precio
-  let milesFuncion = (precio) => "$ " + precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    //funcion para separar por miles el precio
+    let milesFuncion = (precio) => "$ " + precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 
-  // funcion que suma el total de la venta
+    // funcion que suma el total de la venta
     function sumarTotal() {
         // Obtener el descuento
         let descuento = parseInt(document.querySelector("#filaDescuento input").value);
 
+        // Si el descuento no es un número o esta vacio, asignarle 0
         if (isNaN(descuento)) {
             descuento = 0;
         }
@@ -107,6 +110,9 @@ export function VentaProducto(props) {
 
     // lanzar una ventana modal con los inputs para agregar un nuevo producto
     function modalAgregarProducto(ID) {
+
+        // si el ID es de un servicio tecnico, no se puede agregar mas de uno
+        // comprueba si el ID es de un servicio tecnico	
         let isSt = false;
         let precio = 0;
         let descripcion = "";
@@ -161,16 +167,11 @@ export function VentaProducto(props) {
             </div>
         `;
         $VENTAS.appendChild($modal);
+        // inicializamos una instancia del modal y lo mostramos
         $modalAgregarProducto = new bootstrap.Modal($modal);
         $modalAgregarProducto.show();
 
-        // setTimeout(() => {
-        //     document.getElementById("btnAgregarProducto").focus();
-        // }, 400);
-
     }
-
-
 
     //funcion que asincrona que revisa si ya existe el producto en la tabla de venta
     async function revisarProducto(id) {
@@ -184,115 +185,130 @@ export function VentaProducto(props) {
         return existe;
     }
 
-  function newFilaTablaVenta(props) {
-    const $filaTabla = document.createElement("tr");
-    $filaTabla.classList.add("filaTabla");
-    $filaTabla.id = "filaTabla";
-    $filaTabla.dataset.id = props.id;
-    $filaTabla.innerHTML = /*html*/ `
-            <td data-th="ID: " scope="row" data-id=${props.id}>${props.id}</td>
-            <td data-th="Descripcion: " data-id=${props.id}>${props.descripcion}</td>
-            <td data-th="Cantidad: " data-id=${props.id} ><input class="filaCantidad" type="number" min="1" value= "1" data-id=${props.id} data-inventario=${props.inventario} /></td>
-            <td data-th="V. Unitario: " id="tablaVUnitario" data-id=${props.id} data-price=${props.precio}>${milesFuncion(props.precio)}</td>
-            <td data-th="V. Total: " id="tablaVTotal" data-id=${props.id}>${milesFuncion(props.precio)}</td>
-            <td data-th="Accion: " data-id=${props.id}><button id="btnEliminar" class="btn btn-danger" type="submit" data-id=${props.id}>Eliminar</button></td>
-    `;
-    return $filaTabla;
-  }
-  $busquedaID.addEventListener("change", async (e) => {
-    // console.log(e.target.value);
-    if (e.target.value === "") {
-        return;
+    // funcion que retorna un elemento tr con los datos del producto
+    function newFilaTablaVenta(props) {
+        const $filaTabla = document.createElement("tr");
+        $filaTabla.classList.add("filaTabla");
+        $filaTabla.id = "filaTabla";
+        $filaTabla.dataset.id = props.id;
+        $filaTabla.innerHTML = /*html*/ `
+                <td data-th="ID: " scope="row" data-id=${props.id}>${props.id}</td>
+                <td data-th="Descripcion: " data-id=${props.id}>${props.descripcion}</td>
+                <td data-th="Cantidad: " data-id=${props.id} ><input class="filaCantidad" type="number" min="1" value= "1" data-id=${props.id} data-inventario=${props.inventario} /></td>
+                <td data-th="V. Unitario: " id="tablaVUnitario" data-id=${props.id} data-price=${props.precio}>${milesFuncion(props.precio)}</td>
+                <td data-th="V. Total: " id="tablaVTotal" data-id=${props.id}>${milesFuncion(props.precio)}</td>
+                <td data-th="Accion: " data-id=${props.id}><button id="btnEliminar" class="btn btn-danger" type="submit" data-id=${props.id}>Eliminar</button></td>
+        `;
+        return $filaTabla;
     }
 
-    //realizar consulta a la base de datos productos por id
-    let result = await buscarProducto(e.target.value);
+    $busquedaID.addEventListener("change", async (e) => {
 
-    if (!result) {
-        // lanzar una ventana modal con los inputs para agregar un nuevo producto
-        
-        Swal.fire({
-            title: 'Quieres agregar un nuevo producto?',
-            showDenyButton: true,
-            showCancelButton: true,
-            confirmButtonText: 'Guardar',
-            denyButtonText: `No Guardar`,
-          }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-                const ID = $busquedaID.value;
-                modalAgregarProducto(ID);
+        // revisar si el input esta vacio, si lo esta retornar
+        if (e.target.value === "") {
+            return;
+        }
 
+        //realizar consulta a la base de datos productos por id
+        let result = await buscarProducto(e.target.value);
 
-            //   Swal.fire('Saved!', '', 'success')
-            } else if (result.isDenied) {
-              Swal.fire('Intenta Buscar por Descripcion', '', 'info')
-              $busquedaID.value = "";
+        if (!result) {
+            // lanzar una ventana modal con los inputs para agregar un nuevo producto
+            Swal.fire({
+                title: 'Quieres agregar un nuevo producto?',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Guardar',
+                denyButtonText: `No Guardar`,
+            }).then((result) => {
 
-              $busquedaDescripcion.focus();
-            }
-          })
+                // si el usuario confirma guardar el producto, se abre el modal para agregar el producto
+                if (result.isConfirmed) {
+                    const ID = $busquedaID.value;
+                    modalAgregarProducto(ID);
 
-        
-      return;
-    }
+                } else if (result.isDenied) {
+                    // si el usuario no quiere guardar el producto, se limpia el input de busqueda
+                    Swal.fire('Intenta Buscar por Descripcion', '', 'info')
+                    $busquedaID.value = "";
+                    $busquedaDescripcion.focus();
+                }
+            });            
+            return;
+        }
 
-    $busquedaDescripcion.value = result.descripcion;
-    console.log(result);
-    result = {
-        id: result.id,
-        descripcion: result.descripcion,
-        precio: result.precio,
-        inventario: result.cantidad_inventario,
-    }
-    // revisar si el producto ya existe en la tabla de venta
-    const existe = await revisarProducto(result.id);
-    if (existe) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'El producto ya existe en la tabla de venta!',
-            })
-            // limpiar el input de busqueda
-            $busquedaID.value = "";
-            $busquedaDescripcion.value = "";
-        return;
-    }
-    const $filaTabla = newFilaTablaVenta(result);
-    $bodyTabla.appendChild($filaTabla);
-    // sumar el total de la venta
-    sumarTotal()
-    // limpiar el input de busqueda
-    $busquedaID.value = "";
-    $busquedaDescripcion.value = "";
-    $busquedaID.focus();
+        // si el producto existe, se agrega a la tabla de venta
+        $busquedaDescripcion.value = result.descripcion;
 
-  });
+        result = {
+            id: result.id,
+            descripcion: result.descripcion,
+            precio: result.precio,
+            inventario: result.cantidad_inventario,
+        }
 
-  $busquedaDescripcion.addEventListener("input", async (e) => {
+        // revisar si el producto ya existe en la tabla de venta
+        const existe = await revisarProducto(result.id);
+        if (existe) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'El producto ya existe en la tabla de venta!',
+                })
+                // limpiar el input de busqueda
+                $busquedaID.value = "";
+                $busquedaDescripcion.value = "";
+                $busquedaID.focus();
+            return;
+        }
+
+        // si no existe agregarlo a la tabla de venta
+        const $filaTabla = newFilaTablaVenta(result);
+        $bodyTabla.appendChild($filaTabla);
+        // sumar el total de la venta
+        sumarTotal()
+        // limpiar el input de busqueda
+        $busquedaID.value = "";
+        $busquedaDescripcion.value = "";
+        $busquedaID.focus();
+
+    });
+
+    $busquedaDescripcion.addEventListener("input", async (e) => {
+        // revisar si el input esta vacio o si es menor a 3, si lo esta retornar
         if (e.target.value === "" || e.target.value.length < 3) {
             return;
         }
+
         //realizar consulta a la base de datos productos por descripcion
         let resultado = await buscarProductoDescripcionLike(e.target.value);
+
         const $resultadosDescripcion = document.querySelector("#resultadosDescripcion ul");
 
         //eliminar clase de un elemento
         $resultadosDescripcion.classList.remove("d-none");
 
+        //limpiar el ul para que no se repitan los resultados
         $resultadosDescripcion.innerHTML = "";
+
+        //si no hay resultados, mostrar mensaje
+        if (resultado.length === 0) {
+            $resultadosDescripcion.innerHTML = /*html*/ `<li class="list-group-item" tabindex="-1">No hay resultados</li>`;
+            return;
+        }
+
+        //si hay resultados, mostrarlos
         resultado.forEach((producto) => {
             const $li = document.createElement("li");
             $li.classList.add("list-group-item");
-            $li.classList.add("list-resultados-busqueda");
 
             $li.dataset.id = producto.id;
+
             //añadirle tabindex para que se pueda seleccionar con el teclado
             $li.tabIndex = 0;
             $li.textContent = producto.descripcion;
             $resultadosDescripcion.appendChild($li);
-
-            
+ 
         });
     });
     
