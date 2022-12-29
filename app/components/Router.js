@@ -8,7 +8,7 @@ import { Header } from './Header.js';
 import { Ventas } from './Ventas.js';
 
 export async function Router() {
-    console.log("Router", estadoSesion);
+    console.log("Router", location.hash, estadoSesion);
     // metodo Publish-Subscribe para comunicar componentes
     window.editor = {
         suscriptores: {},

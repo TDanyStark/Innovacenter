@@ -36,15 +36,37 @@
 
     let auth = getAuth();
     let estadoSesion = null;
+
+    //duración de la sesión 4 horas
+    let duracionSesion = 1000 * 60 * 60 * 4; // 4 horas
     
 
     onAuthStateChanged(auth, (user) => {
+
+      if (user) {
+        setTimeout(() => {
+          auth.signOut().then(() => {
+            // Sign-out successful.
+            location.hash = "#/login";
+          }).catch((error) => {
+            // An error happened.
+          });
+        }, duracionSesion);
+      }
+      return;
+    });
+
+    onAuthStateChanged(auth, (user) => {
+
       if (user) {
           estadoSesion = user;
       } else {
           estadoSesion = false;
       }
     });
+
+
+
 
     
 

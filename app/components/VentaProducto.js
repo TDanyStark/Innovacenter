@@ -1,4 +1,4 @@
-import { buscarProducto, buscarProductoDescripcionLike, guardarProducto, guardarVenta } from "../helpers/firebase.js";
+import { buscarProducto, buscarProductoDescripcionLike, guardarProducto, guardarVenta, estadoSesion } from "../helpers/firebase.js";
 
 export function VentaProducto(props) {
     // console.log(props);
@@ -567,7 +567,7 @@ export function VentaProducto(props) {
                 return;
             }
             // verificar que usuario esta realizando la venta
-            
+            console.log(estadoSesion.email);
             // guardarVenta();
         }
     });
