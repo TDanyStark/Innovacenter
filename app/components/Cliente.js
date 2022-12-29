@@ -114,11 +114,12 @@ export function Cliente() {
 
         if (result) {
             Swal.fire({
-                title: "Exito!",
-                text: "Cliente registrado",
-                icon: "success",
-                confirmButtonText: "Cerrar",
-            });
+                position: 'top-end',
+                icon: 'success',
+                title: 'cliente registrado con exito',
+                showConfirmButton: false,
+                timer: 1500
+              })
             
             // si el componente de venta de productos no se renderizo, lo renderizamos
             if (!componenteRenderizado) {

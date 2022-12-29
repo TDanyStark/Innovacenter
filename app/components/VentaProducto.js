@@ -414,6 +414,8 @@ export function VentaProducto(props) {
             e.target.parentElement.parentElement.remove();
             
             //focus en el input de busqueda por id
+            $busquedaDescripcion.value = "";
+            $busquedaID.value = "";
             $busquedaID.focus();
 
             // recalcular el total de la venta
@@ -460,7 +462,8 @@ export function VentaProducto(props) {
             }
             
             // retornar si alguno de los campos esta vacio
-            if($id === "" || $descripcion === "" || $precio === "" || $inventario === "" || $proveedor === ""){
+            console.log($id, $descripcion, $precio, $inventario, $proveedor);
+            if($id == "" || $descripcion == "" || $precio == "" || $inventario == "" || $proveedor == ""){
 
                 Swal.fire({
                     icon: "error",
@@ -489,13 +492,17 @@ export function VentaProducto(props) {
             console.log(result);
             if(result){
                 Swal.fire({
-                    icon: "success",
-                    title: "Producto agregado",
-                    text: "El producto se agregó correctamente",
-                });
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'producto agregado',
+                    showConfirmButton: false,
+                    timer: 1500
+                  })
                 $formModal.reset();
                 //ocultar modal de agregar producto
                 $modalAgregarProducto.hide();
+
+                
 
                 // agregar producto a la tabla de productos
                 dataNewProduct = {
@@ -507,6 +514,11 @@ export function VentaProducto(props) {
                 let $bodyTabla = document.querySelector("#bodyTabla");
                 $bodyTabla.appendChild(newFilaTablaVenta(dataNewProduct));
 
+                // limpiar y hacer focus en el input de busqueda por id
+                $busquedaDescripcion.value = "";
+                $busquedaID.value = "";
+                $busquedaID.focus();
+
             }else{
                 Swal.fire({
                     icon: "error",
@@ -515,7 +527,11 @@ export function VentaProducto(props) {
                 });
                 $formModal.reset();
                 //ocultar modal de agregar producto
-                $modalAgregarProducto.hide();       
+                $modalAgregarProducto.hide();   
+                
+                // limpiar y hacer focus en el input de busqueda por id
+                $busquedaID.value = "";
+                $busquedaID.focus();
             }
             return;
         }
