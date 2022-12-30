@@ -40,9 +40,10 @@ export function Cliente() {
 
     $celular.addEventListener("keyup", async (e) => {
         const $btnGuardar = document.getElementById("btnGuardarCliente");
-
+        
         // Remover evento previamente asignado
         $celular.removeEventListener("keyup", this);
+        console.log("soy el celular keyup");
 
         if (e.target.value.length == 10 ) {
 
@@ -80,6 +81,11 @@ export function Cliente() {
             $btnGuardar.disabled = true;
             $nombre.disabled  = true;
             $celular.disabled  = true;
+            const $busquedaID = document.getElementById('busquedaID');
+            $busquedaID.focus();
+
+            const element = document.getElementById('ventaproducto');
+            element.classList.remove('d-none');
 
 
         }
