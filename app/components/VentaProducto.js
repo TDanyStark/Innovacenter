@@ -777,7 +777,6 @@ export function VentaProducto(props) {
       if (e.key === "Enter") {
         const $elementoFocus = document.activeElement;
         $busquedaDescripcion.value = $elementoFocus.textContent;
-        console.log($elementoFocus);
         $busquedaID.focus();
         const $resultadosDescripcion = document.querySelector(
           "#resultadosDescripcion ul"
