@@ -318,14 +318,14 @@ th[scope="col"]:nth-child(5) {
   width: 80%;
 }
 .inputDescuento{
-  width: 50%;
+  width: 100%;
 }
 .izquierda{
   text-align: right;
 }
 #resultadosDescripcion{
   position: absolute;
-  min-width: 400px;
+  min-width: 295px;
   max-height: 150px;
   overflow-y: auto;
   overflow-x: hidden;

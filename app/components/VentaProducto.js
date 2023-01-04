@@ -778,12 +778,18 @@ export function VentaProducto(props) {
         const $elementoFocus = document.activeElement;
         $busquedaDescripcion.value = $elementoFocus.textContent;
         console.log($elementoFocus);
-        $busquedaID.value = $elementoFocus.dataset.id;
         $busquedaID.focus();
         const $resultadosDescripcion = document.querySelector(
           "#resultadosDescripcion ul"
         );
         $resultadosDescripcion.classList.add("d-none");
+
+        if (e.target.textContent == "No hay resultados") {
+          $busquedaDescripcion.value = "";
+          $busquedaDescripcion.focus();
+          return;
+        }
+        $busquedaID.value = $elementoFocus.dataset.id;
 
         //disparar el evento change del input de busqueda por id
         $busquedaID.dispatchEvent(new Event("change"));
@@ -895,11 +901,16 @@ export function VentaProducto(props) {
     // cuando se le de click a un elemento de la lista de resultados de busqueda,
     // se pone el texto del elemento en el input de busqueda por descripcion y se oculta la lista
     if (e.target.classList.contains("list-group-item")) {
-      $busquedaDescripcion.value = e.target.textContent;
-      $busquedaID.value = e.target.dataset.id;
       document
         .querySelector("#resultadosDescripcion ul")
         .classList.add("d-none");
+      if (e.target.textContent == "No hay resultados") {
+        $busquedaDescripcion.value = "";
+        $busquedaDescripcion.focus();
+        return;
+      }
+      $busquedaID.value = e.target.dataset.id;
+      $busquedaDescripcion.value = e.target.textContent;
 
       // esto es para que se dispare el evento change del input de busqueda por ID
       $busquedaID.dispatchEvent(new Event("change"));
